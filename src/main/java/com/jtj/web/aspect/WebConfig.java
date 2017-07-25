@@ -1,4 +1,4 @@
-package com.jtj.web;
+package com.jtj.web.aspect;
 
 import com.jtj.web.aspect.SecurityInterceptor;
 import com.jtj.web.common.StringToDateConverter;
@@ -33,7 +33,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(getSecurityInterceptor()).addPathPatterns("/**");
+        //registry.addInterceptor(getSecurityInterceptor()).addPathPatterns("/**");
         super.addInterceptors(registry);
     }
 

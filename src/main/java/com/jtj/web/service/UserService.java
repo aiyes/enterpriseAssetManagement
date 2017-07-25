@@ -5,6 +5,7 @@ import com.jtj.web.common.PageDto;
 import com.jtj.web.common.ResultDto;
 import com.jtj.web.dto.UserDto;
 import com.jtj.web.entity.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +18,7 @@ import java.util.List;
  * 2016/12/23 23:26 End.
  */
 @Service
-public interface UserService extends BaseService<User,UserDto> {
+public interface UserService extends BaseService<User,UserDto>, UserDetailsService {
 
     ResultDto<Object> login(HttpServletRequest request, HttpServletResponse response,
                             String name, String password,Long time);
