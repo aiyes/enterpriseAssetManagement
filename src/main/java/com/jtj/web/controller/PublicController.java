@@ -14,6 +14,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -77,6 +78,13 @@ public class PublicController {
     public ResultDto<List<KeyValue>> getDictionaryMap(@PathVariable("table") String table,
                                                       @PathVariable("column") String column){
         return systemService.getDictionaryMap(table, column);
+    }
+
+    @ApiOperation("test")
+    @ResponseBody
+    @GetMapping("/test")
+    public Mono<String> test(){
+        return Mono.justOrEmpty("okkkkkkk");
     }
 
 }
