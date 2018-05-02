@@ -171,7 +171,7 @@
             self.getTableList();
             Server.point.getPointTree.execute(data => {
                 self.tree.point = data.object;
-            })
+            });
         },
         beforeMount:function () {
         },
@@ -231,13 +231,6 @@
                 this.fromModalData.isCreate = false;
                 this.fromModalData.submit = this.getSubmitFunc(Server.user.update);
                 this.fromModal.show();
-            },
-            getPointMapById:function (id) {
-                let self;
-                Server.point.getMapByPid.param("pid",id).setAsync(false).execute((data) => {
-                    self = data.object;
-                });
-                return self;
             },
             showPasswordModal:function (obj) {
                 //todo 接口待写

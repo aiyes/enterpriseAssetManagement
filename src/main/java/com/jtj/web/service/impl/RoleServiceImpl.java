@@ -6,10 +6,8 @@ import com.jtj.web.common.exception.AssetException;
 import com.jtj.web.dao.PermissionDao;
 import com.jtj.web.dao.PointDao;
 import com.jtj.web.dao.RoleDao;
-import com.jtj.web.dto.RoleDto;
 import com.jtj.web.entity.KeyValue;
 import com.jtj.web.entity.Permission;
-import com.jtj.web.entity.Role;
 import com.jtj.web.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,9 +23,7 @@ import java.util.stream.Collectors;
  * 2017/3/15.
  */
 @Service
-public class RoleServiceImpl
-        extends BaseServiceImpl<Role,RoleDto,RoleDao>
-        implements RoleService {
+public class RoleServiceImpl implements RoleService {
 
     @Autowired
     private RoleDao roleDao;
@@ -37,9 +33,23 @@ public class RoleServiceImpl
     private PermissionDao permissionDao;
 
     @Override
+    public RoleDao getRepository() {
+        return roleDao;
+    }
+
+    @Override
     public ResultDto<Object> delete(Long[] ids) throws AssetException {
         //todo 删除前修改用户为默认角色
-        return super.delete(ids);
+        ResultDto<Object> result = new ResultDto<>();
+        int count = roleDao.delete(ids);
+        int all = ids.length;
+        if (count == all){
+            result.setResultCode(ResultCode.SUCCESS_DELETE);
+            return result;
+        }
+        result.setResultCode(ResultCode.OPERATE_FAIL);
+        result.setMessage("存在"+(all - count)+"/"+all+"数据有误！");
+        throw new AssetException(result);
     }
 
     @Override
@@ -64,7 +74,7 @@ public class RoleServiceImpl
 
     @Override
     public ResultDto<Object> updatePermission(Long roleId, Long[] permissionIds) {
-        ResultDto<Object> result = new ResultDto<>(ResultCode.SUCCESS);
+        ResultDto<Object> result = new ResultDto<>(ResultCode.SUCCESS_PUT);
         //清除权限
         roleDao.clearPermission(roleId);
         //添加权限

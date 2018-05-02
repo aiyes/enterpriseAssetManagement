@@ -13,14 +13,14 @@
                         <tt-simple-input label="uuid" v-model="conditions.uuid"></tt-simple-input>
                         <tt-simple-input label="资产编号" v-model="conditions.customsId"></tt-simple-input>
                         <tt-simple-input label="名称" v-model="conditions.name"></tt-simple-input>
-                        <tt-simple-tree-root label="类型" v-model="conditions.assetsTypeId" :data="getTypeMapById"></tt-simple-tree-root>
+                        <tt-simple-tree-root-v2 label="类型" v-model="conditions.assetsTypeId" :data="tree.assetType" :option="{key:'id',value:'name'}"></tt-simple-tree-root-v2>
                         <tt-simple-select label="网点" v-model="conditions.pointId" :data="Map.point" show-undefined></tt-simple-select>
 
                         <div class="btn-toolbar pull-right" role="toolbar">
                             <div class="btn-group">
                                 <button @click="showUpdateModal(3,tableSelectData[0])" v-if="hasOneChecked" v-shiro:permission="'asset:updateStatus'" class="btn btn-outline btn-primary" type="button">{{tableSelectData[0].status === 3?'完成':'维修'}}</button>
                                 <button @click="showUpdateModal(4,tableSelectData[0])" v-if="hasOneChecked" v-shiro:permission="'asset:updateStatus'" class="btn btn-outline btn-primary" type="button">{{tableSelectData[0].status === 4?'撤回报废':'报废'}}</button>
-                                <button @click="openStockTake()" v-shiro:permission="'asset:addStockTake'" class="btn btn-outline btn-primary" type="button">开启盘点</button>
+                                <button @click="openStockTake()" v-shiro:permission="'asset:stockTake:add'" class="btn btn-outline btn-primary" type="button">开启盘点</button>
                                 <button @click="deleteAll()" v-if="hasChecked" v-shiro:permission="'asset:delete'" class="btn btn-outline btn-danger" type="button">删除</button>
                             </div>
                             <div class="btn-group">
@@ -164,6 +164,9 @@
                 stockTakeData:{
                     conditions:null,
                     name:null
+                },
+                tree:{
+                    assetType:[]
                 }
             }
         },
@@ -189,6 +192,10 @@
         },
         created:function () {
             this.getTableList();
+            let self = this;
+            Server.assetType.getTypeTree.execute(data => {
+                self.tree.assetType = data.object;
+            });
         },
         beforeMount:function () {
         },
@@ -248,13 +255,6 @@
                     self.operationRecordData.data = data.object;
                 });
                 self.operationRecordModal.show();
-            },
-            getTypeMapById:function (id) {
-                let self;
-                Server.assetType.getMapByPid.param("pid",id).setAsync(false).execute((data) => {
-                    self = data.object;
-                });
-                return self;
             },
             openStockTake:function () {
                 let self = this;

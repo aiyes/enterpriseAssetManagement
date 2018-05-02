@@ -1,17 +1,3 @@
-const SlotsUtils = {
-    get:function (slots,nodes) {
-        if (slots != null){
-            return [slots];
-        }else {
-            return nodes;
-        }
-    },
-    getItem:function (slots,node) {
-        return slots || node;
-    }
-};
-
-
 //todo 整合菜单为单个递归组件
 Vue.component("tt-menu-root",{
     props: ['data'],
@@ -500,7 +486,7 @@ Vue.component('tt-modal', {
                 },'×'/*&times;*/)
             ])
         );
-        bodyTitleElement.push(createElement('div',{ class:{'col-sm-10':true}},[createElement('h3',self.title)]));
+        bodyTitleElement.push(createElement('div',{ class:{'col-sm-12':true}, style:{width:"80%"}},[createElement('h3',self.title)]));
         //body节点
         let bodyElement = [];
         bodyElement.push(createElement('div',{class:{'row':true}},bodyTitleElement));
@@ -650,7 +636,14 @@ Vue.component("tt-simple-tree-root-v2",{
         }
     },
     methods:{
-        call:function (object) {
+        call:function (object,pre) {
+            if (!this.defaultValue||!object||pre){
+                this.$emit('input',object);
+                return;
+            }
+            if (this.defaultValue.indexOf(object.toString()) !== -1){
+                return;
+            }
             this.$emit('input',object);
         },
         getDefaultValue:function (tree,value) {
@@ -720,7 +713,7 @@ Vue.component("tt-simple-tree-children-v2",{
         },
         selectModel:function (item) {
             if (item === null) {
-                this.call(this.pid);
+                this.call(this.pid,true);
                 return;
             }
             this.call(item[this.innerKey]);

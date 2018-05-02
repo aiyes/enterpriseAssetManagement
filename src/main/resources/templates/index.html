@@ -14,6 +14,7 @@
     <link th:href="@{/css/plugins/chosen/bootstrap-chosen.css}" rel="stylesheet" />
     <link th:href="@{/css/plugins/datapicker/datepicker3.css}" rel="stylesheet" />
     <link th:href="@{/css/plugins/dualListbox/bootstrap-duallistbox.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/plugins/select2/select2.min.css}" rel="stylesheet" />
     <link th:href="@{/css/animate.css}" rel="stylesheet" />
     <link th:href="@{/css/style.css}" rel="stylesheet" />
     <link th:href="@{/css/index.css}" rel="stylesheet" />
@@ -232,18 +233,19 @@
 <script th:src="@{/js/plugins/chartJs/Chart.min.js}"></script>
 <script th:src="@{/js/plugins/qrcode/jquery.qrcode.min.js}"></script>
 <script th:src="@{/js/plugins/dualListbox/jquery.bootstrap-duallistbox.js}"></script>
+<script th:src="@{/js/plugins/select2/select2.full.min.js}"></script>
 
 <!-- Custom javascript -->
-<script th:src="@{/js/shiro.js}"></script>
+<script th:src="@{/js/shiro.js(_r=${#strings.randomAlphanumeric(5)})}"></script>
 <script th:src="@{/js/md5.js}"></script>
-<script th:src="@{/js/common.js}"></script>
-<script th:src="@{/js/web.js}"></script>
-<script th:src="@{/js/server.js}"></script>
-<script th:src="@{/js/menu.js}"></script>
-<script th:src="@{/js/component.js}"></script>
-<script th:src="@{/js/router.js}"></script>
-<script th:src="@{/js/store.js}"></script>
-<script th:src="@{/js/index.js}"></script>
+<script th:src="@{/js/common.js(_r=${#strings.randomAlphanumeric(5)})}"></script>
+<script th:src="@{/js/web.js(_r=${#strings.randomAlphanumeric(5)})}"></script>
+<script th:src="@{/js/server.js(_r=${#strings.randomAlphanumeric(5)})}"></script>
+<script th:src="@{/js/menu.js(_r=${#strings.randomAlphanumeric(5)})}"></script>
+<script th:src="@{/js/component.js(_r=${#strings.randomAlphanumeric(5)})}"></script>
+<script th:src="@{/js/router.js(_r=${#strings.randomAlphanumeric(5)})}"></script>
+<script th:src="@{/js/store.js(_r=${#strings.randomAlphanumeric(5)})}"></script>
+<script th:src="@{/js/index.js(_r=${#strings.randomAlphanumeric(5)})}"></script>
 
 <script>if (window.module) module = window.module;</script>
 

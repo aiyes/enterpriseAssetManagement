@@ -8,7 +8,6 @@ import com.jtj.web.common.utils.BeanUtils;
 import com.jtj.web.dao.AssetDao;
 import com.jtj.web.dao.StockTakeDao;
 import com.jtj.web.dto.AssetDto;
-import com.jtj.web.dto.StockTakeDto;
 import com.jtj.web.dto.StockTakeItemDto;
 import com.jtj.web.entity.KeyValue;
 import com.jtj.web.entity.StockTake;
@@ -31,7 +30,7 @@ import java.util.List;
  * 2017/5/4.
  */
 @Service
-public class StockTakeServiceImpl extends BaseServiceImpl<StockTake,StockTakeDto,StockTakeDao> implements StockTakeService{
+public class StockTakeServiceImpl implements StockTakeService{
 
     @Autowired
     private StockTakeDao stockTakeDao;
@@ -39,6 +38,11 @@ public class StockTakeServiceImpl extends BaseServiceImpl<StockTake,StockTakeDto
     private AssetDao assetDao;
     @Autowired
     private AssetOperationRecordService assetOperationRecordService;
+
+    @Override
+    public StockTakeDao getRepository() {
+        return stockTakeDao;
+    }
 
     @Override
     public ResultDto<Object> addByAsset(String name, AssetDto dto) {
@@ -54,9 +58,9 @@ public class StockTakeServiceImpl extends BaseServiceImpl<StockTake,StockTakeDto
         User user = (User) session.getAttribute(Constant.SESSION_USER);
         stockTake.setUserId(user.getId());
 
-        ResultDto<Object> result = super.add(stockTake);
+        ResultDto<Object> result = add(stockTake);
 
-        if (ResultCode.SUCCESS.getCode().equals(result.getCode())){
+        if (ResultCode.SUCCESS_POST.getCode().equals(result.getCode())){
             stockTakeDao.addItem(stockTake.getId(),dto);
         }
 

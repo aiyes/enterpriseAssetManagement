@@ -7,10 +7,11 @@ import com.jtj.web.common.exception.AssetException;
 import com.jtj.web.common.utils.BeanUtils;
 import com.jtj.web.dao.AssetDao;
 import com.jtj.web.dao.BorrowDao;
+import com.jtj.web.dao.UserDao;
 import com.jtj.web.dto.AssetDto;
-import com.jtj.web.dto.BorrowDto;
 import com.jtj.web.entity.Asset;
 import com.jtj.web.entity.Borrow;
+import com.jtj.web.entity.KeyValue;
 import com.jtj.web.entity.User;
 import com.jtj.web.service.AssetOperationRecordService;
 import com.jtj.web.service.BorrowService;
@@ -19,6 +20,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -28,9 +30,7 @@ import java.util.List;
  * 2017/3/15.
  */
 @Service
-public class BorrowServiceImpl
-        extends BaseServiceImpl<Borrow,BorrowDto,BorrowDao>
-        implements BorrowService {
+public class BorrowServiceImpl implements BorrowService {
 
     @Autowired
     private BorrowDao borrowDao;
@@ -38,6 +38,13 @@ public class BorrowServiceImpl
     private AssetOperationRecordService assetOperationRecordService;
     @Autowired
     private AssetDao assetDao;
+    @Autowired
+    private UserDao userDao;
+
+    @Override
+    public BorrowDao getRepository() {
+        return borrowDao;
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -60,7 +67,7 @@ public class BorrowServiceImpl
         result.setResultCode(updateAssetStatus(uuid, Constant.AssetStatus.BORROW) == 1?
                 ResultCode.SUCCESS_OPERATE:ResultCode.OPERATE_FAIL);
         assetOperationRecordService.addOperationRecord(uuid, Constant.OperationType.BORROW,
-                result.getTitle()+",租借人："+borrow.getUserId());
+                result.getTitle()+",租借人id："+borrow.getUserId());
         borrow.setUuid(uuid);
         borrowDao.add(borrow);
         return result;
@@ -86,7 +93,7 @@ public class BorrowServiceImpl
         result.setResultCode(updateAssetStatus(uuid, Constant.AssetStatus.NORMAL) == 1?
                 ResultCode.SUCCESS_OPERATE:ResultCode.OPERATE_FAIL);
         assetOperationRecordService.addOperationRecord(uuid, Constant.OperationType.RETURN,
-                result.getTitle()+",归还人："+borrow.getUserId());
+                result.getTitle()+",归还人id："+borrow.getUserId());
         borrow.setUuid(uuid);
         borrow.setStatus(2);
         if (borrow.getReturnTime() == null) borrow.setReturnTime(new Date());
@@ -109,6 +116,14 @@ public class BorrowServiceImpl
         User user = (User) subject.getPrincipal();
         borrow.setUserId(user.getId());
         return borrowAsset(borrow);
+    }
+
+    @Override
+    public ResultDto<List<KeyValue>> getUsers(String name) {
+        ResultDto<List<KeyValue>> result = new ResultDto<>(ResultCode.SUCCESS_GET);
+        if (!StringUtils.isEmpty(name))
+            result.setObject(userDao.getKeyValueByName(name));
+        return result;
     }
 
     private int updateAssetStatus(String uuid, Constant.AssetStatus status){
